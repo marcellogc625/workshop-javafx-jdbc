@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -22,6 +25,8 @@ public class DepartmentFormController implements Initializable {
     private Department entity;
     
     private DepartmentService service;
+    
+    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
     
     @FXML
     private TextField txtId;
@@ -45,6 +50,10 @@ public class DepartmentFormController implements Initializable {
     public void setService(DepartmentService service) {
         this.service = service;
     }
+    
+    public void subscribeDataChangeListener(DataChangeListener dcl) {
+	dataChangeListeners.add(dcl);
+    }
 
     @FXML
     public void onBtSaveAction(ActionEvent evt) {
@@ -57,6 +66,7 @@ public class DepartmentFormController implements Initializable {
 	    }
 	    entity = getFormData();
 	    service.saveOrUpdate(entity);
+	    notifyDataChangeListeners();
 	    Utils.currentStage(evt).close();
 	} 
 	catch (DbException e) {
@@ -64,13 +74,6 @@ public class DepartmentFormController implements Initializable {
 	}
     }
     
-    private Department getFormData() {
-	Department obj = new Department();
-	obj.setId(Utils.tryParseToInt(txtId.getText()));
-	obj.setName(txtName.getText());
-	return obj;
-    }
-
     @FXML
     public void onBtCancelAction(ActionEvent evt) {
 	Utils.currentStage(evt).close();
@@ -79,6 +82,19 @@ public class DepartmentFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 	initializeNodes();
+    }
+    
+    private void notifyDataChangeListeners() {
+	for (DataChangeListener dcl : dataChangeListeners) {
+	    dcl.onDataChanged();
+	}
+    }
+
+    private Department getFormData() {
+	Department obj = new Department();
+	obj.setId(Utils.tryParseToInt(txtId.getText()));
+	obj.setName(txtName.getText());
+	return obj;
     }
     
     private void initializeNodes() {
