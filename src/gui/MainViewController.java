@@ -16,6 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.services.DepartmentService;
 import model.services.SellerService;
 
@@ -54,7 +57,6 @@ public class MainViewController implements Initializable {
     @Override
     public void initialize(URL uri, ResourceBundle rb) {
 	
-	
     }
 
     private synchronized <T> void loadView(String absoluteView, Consumer<T> initializingAction) {
@@ -72,6 +74,7 @@ public class MainViewController implements Initializable {
 	    
 	    T controller = loader.getController();
 	    initializingAction.accept(controller);
+	    
 	}
 	
 	catch(IOException e) {

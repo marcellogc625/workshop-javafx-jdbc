@@ -23,7 +23,7 @@ public class Main extends Application {
 	    
 	    mainScene = new Scene(scrollPane);
 	    primaryStage.setScene(mainScene);
-	    primaryStage.setTitle("Sample JavaFX Application");
+	    primaryStage.setTitle("Store DB data manager");
 	    primaryStage.show();
 	}
 	catch(IOException e) {
